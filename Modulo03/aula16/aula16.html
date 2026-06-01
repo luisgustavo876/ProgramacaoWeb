@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pokédex Ultra-Moderna - Aula 16</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --bg-gradient: linear-gradient(135deg, #090a0f 0%, #151622 50%, #0a0b10 100%);
+      --pokedex-red: #e11d48;
+      --pokedex-red-dark: #be123c;
+      --pokedex-red-glow: rgba(225, 29, 72, 0.35);
+      
+      --card-bg: rgba(20, 22, 37, 0.7);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --glass-glow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+      
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --type-glow: rgba(255, 255, 255, 0.1);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Outfit', sans-serif;
+      background: var(--bg-gradient);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 2.5rem 1rem;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    body::before, body::after {
+      content: '';
+      position: absolute;
+      width: 300px;
+      height: 300px;
+      border-radius: 50%;
+      filter: blur(120px);
+      z-index: 0;
+      pointer-events: none;
+    }
+    body::before {
+      background: rgba(225, 29, 72, 0.15);
+      top: 15%;
+      left: 10%;
+    }
+    body::after {
+      background: rgba(56, 189, 248, 0.12);
+      bottom: 15%;
+      right: 10%;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 480px;
+      z-index: 10;
+      position: relative;
+    }
+
+    .pokedex-device {
+      background: linear-gradient(160deg, #1e0b11 0%, #110508 100%);
+      border: 4px solid #be123c;
+      border-radius: 32px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8),
+                  0 0 30px rgba(225, 29, 72, 0.25),
+                  inset 0 2px 4px rgba(255, 255, 255, 0.2);
+      padding: 6px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .pokedex-inner {
+      background: linear-gradient(185deg, #161827 0%, #0d0e17 100%);
+      border-radius: 24px;
+      padding: 2rem 1.5rem 1.5rem 1.5rem;
+      border: 2px solid rgba(255, 255, 255, 0.03);
+      position: relative;
+    }
+
+    .pokedex-header-sensors {
+      display: flex;
+      align-items: center;
+      margin-bottom: 1.8rem;
+      padding-bottom: 1rem;
+      border-bottom: 2px dashed rgba(255, 255, 255, 0.06);
+    }
+
+    .pokedex-lens-outer {
+      width: 46px;
+      height: 46px;
+      background: #f8fafc;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 10px rgba(255, 255, 255, 0.15);
+      flex-shrink: 0;
+    }
+
+    .pokedex-lens {
+      width: 38px;
+      height: 38px;
+      background: radial-gradient(circle, #38bdf8 0%, #0284c7 60%, #0369a1 100%);
+      border-radius: 50%;
+      box-shadow: inset 0 0 8px rgba(255, 255, 255, 0.8),
+                  0 0 12px rgba(56, 189, 248, 0.7);
+      position: relative;
+      animation: lensGlow 3s infinite alternate;
+    }
+
+    @keyframes lensGlow {
+      0% { filter: brightness(1); box-shadow: inset 0 0 8px rgba(255,255,255,0.8), 0 0 8px rgba(56, 189, 248, 0.6); }
+      100% { filter: brightness(1.2); box-shadow: inset 0 0 8px rgba(255,255,255,0.8), 0 0 20px rgba(56, 189, 248, 0.9); }
+    }
+
+    .pokedex-lights {
+      display: flex;
+      gap: 8px;
+      margin-left: 16px;
+    }
+
+    .pokedex-light {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.4);
+      position: relative;
+    }
+    
+    .pokedex-light::after {
+      content: '';
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      width: 3px;
+      height: 3px;
+      background: #fff;
+      border-radius: 50%;
+      opacity: 0.8;
+    }
+
+    .pokedex-light.red { background: #ef4444; box-shadow: 0 0 8px #ef4444; animation: blink 1.2s infinite alternate; }
+    .pokedex-light.yellow { background: #f59e0b; box-shadow: 0 0 8px #f59e0b; animation: blink 1.6s infinite alternate; }
+    .pokedex-light.green { background: #10b981; box-shadow: 0 0 8px #10b981; animation: blink 2s infinite alternate; }
+
+    @keyframes blink {
+      0% { opacity: 0.4; }
+      100% { opacity: 1; }
+    }
+
+    h1 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 24px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      background: linear-gradient(to right, #ffffff 40%, #fdba74 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-left: auto;
+    }
+
+    .busca {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 1.5rem;
+      position: relative;
+    }
+
+    .busca-input-container {
+      position: relative;
+      flex: 1;
+    }
+
+    .busca-input-container svg {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 18px;
+      height: 18px;
+      color: var(--text-muted);
+      pointer-events: none;
+      transition: color 0.3s;
+    }
+
+    .busca input {
+      width: 100%;
+      padding: 12px 14px 12px 42px;
+      font-size: 15px;
+      background: rgba(13, 14, 23, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 14px;
+      color: var(--text-main);
+      outline: none;
+      font-family: 'Outfit', sans-serif;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+    }
+
+    .busca input::placeholder {
+      color: #64748b;
+    }
+
+    .busca input:focus {
+      border-color: var(--pokedex-red);
+      box-shadow: 0 0 0 3px var(--pokedex-red-glow),
+                  inset 0 2px 4px rgba(0, 0, 0, 0.3);
+      background: rgba(20, 22, 37, 0.95);
+    }
+
+    .busca input:focus + svg {
+      color: var(--pokedex-red);
+    }
+
+    .busca button {
+      padding: 0 20px;
+      font-size: 15px;
+      font-weight: 600;
+      border: none;
+      border-radius: 14px;
+      background: linear-gradient(135deg, var(--pokedex-red) 0%, var(--pokedex-red-dark) 100%);
+      color: #fff;
+      cursor: pointer;
+      font-family: 'Outfit', sans-serif;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 4px 14px rgba(225, 29, 72, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .busca button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(225, 29, 72, 0.5);
+      filter: brightness(1.1);
+    }
+
+    .busca button:active {
+      transform: translateY(0);
+    }
+
+    #status {
+      text-align: center;
+      font-size: 15px;
+      color: var(--text-muted);
+      min-height: 24px;
+      margin-bottom: 1.2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      font-weight: 500;
+      transition: all 0.3s ease;
+    }
+
+    .loader-pokeball {
+      width: 22px;
+      height: 22px;
+      border: 3px solid var(--text-muted);
+      border-radius: 50%;
+      position: relative;
+      animation: spin 1s linear infinite;
+    }
+
+    .loader-pokeball::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: var(--text-muted);
+      transform: translateY(-50%);
+    }
+
+    .loader-pokeball::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 6px;
+      height: 6px;
+      background: var(--text-main);
+      border: 2px solid var(--text-muted);
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    @keyframes spin {
+      100% { transform: rotate(360deg); }
+    }
+
+    #card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      padding: 1.8rem;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      box-shadow: var(--glass-glow);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      position: relative;
+      overflow: hidden;
+      transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    #card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at top, var(--type-glow) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 1;
+      opacity: 0.75;
+      transition: background 0.5s ease;
+    }
+
+    #card.visivel {
+      display: flex;
+      animation: cardAppear 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    }
+
+    @keyframes cardAppear {
+      0% { opacity: 0; transform: translateY(30px) scale(0.95); }
+      100% { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .imagem-wrapper {
+      position: relative;
+      width: 170px;
+      height: 170px;
+      background: rgba(13, 14, 23, 0.5);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.6),
+                  0 0 25px var(--type-glow);
+      z-index: 2;
+      transition: box-shadow 0.5s ease;
+    }
+
+    .imagem-wrapper::before {
+      content: '';
+      position: absolute;
+      inset: 10px;
+      border: 1px dashed rgba(255, 255, 255, 0.1);
+      border-radius: 50%;
+      animation: rotateDashed 20s linear infinite;
+    }
+
+    @keyframes rotateDashed {
+      100% { transform: rotate(360deg); }
+    }
+
+    #card img {
+      width: 140px;
+      height: 140px;
+      object-fit: contain;
+      z-index: 3;
+      filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.3));
+      animation: float 4s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-8px); }
+      100% { transform: translateY(0px); }
+    }
+
+    .meta-info {
+      text-align: center;
+      z-index: 2;
+    }
+
+    #numero-pokemon {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--pokedex-red);
+      letter-spacing: 2px;
+      margin-bottom: 4px;
+      background: rgba(225, 29, 72, 0.12);
+      padding: 2px 10px;
+      border-radius: 30px;
+      display: inline-block;
+      border: 1px solid rgba(225, 29, 72, 0.2);
+    }
+
+    #nome-pokemon {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 24px;
+      font-weight: 700;
+      color: #fff;
+      text-transform: capitalize;
+      letter-spacing: 0.5px;
+      margin-top: 4px;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    }
+
+    .tipos {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: center;
+      z-index: 2;
+    }
+
+    .tipo {
+      padding: 6px 16px;
+      border-radius: 12px;
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.3s ease;
+    }
+    
+    .tipo:hover {
+      transform: scale(1.05);
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.35);
+    }
+
+    .stats {
+      width: 100%;
+      margin-top: 10px;
+      background: rgba(13, 14, 23, 0.45);
+      border-radius: 16px;
+      padding: 1rem;
+      border: 1px solid rgba(255, 255, 255, 0.03);
+      z-index: 2;
+    }
+
+    .stat-linha {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+
+    .stat-linha:last-child {
+      margin-bottom: 0;
+    }
+
+    .stat-nome {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      width: 80px;
+      flex-shrink: 0;
+      text-align: left;
+      letter-spacing: 0.5px;
+    }
+
+    .stat-barra-bg {
+      flex: 1;
+      height: 8px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 99px;
+      overflow: hidden;
+      position: relative;
+      box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.5);
+    }
+
+    .stat-barra {
+      height: 100%;
+      border-radius: 99px;
+      width: 0%;
+      transition: width 1s cubic-bezier(0.34, 1.56, 0.64, 1);
+      box-shadow: 0 0 8px currentColor;
+    }
+
+    .stat-valor {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      color: #fff;
+      width: 32px;
+      text-align: right;
+    }
+  </style>
+</head>
+<body>
+
+  <main class="container">
+    <div class="pokedex-device">
+      <div class="pokedex-inner">
+        
+        <header class="pokedex-header-sensors">
+          <div class="pokedex-lens-outer">
+            <div class="pokedex-lens" id="sensor-principal"></div>
+          </div>
+          <div class="pokedex-lights">
+            <div class="pokedex-light red"></div>
+            <div class="pokedex-light yellow"></div>
+            <div class="pokedex-light green"></div>
+          </div>
+          <h1>Pokédex</h1>
+        </header>
+
+        <section class="busca" aria-label="Busca de Pokémon">
+          <div class="busca-input-container">
+            <input type="text" id="input-pokemon" placeholder="Digite o nome ou número..." aria-label="Nome ou número do Pokémon" />
+            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+            </svg>
+          </div>
+          <button onclick="buscarPokemon()" id="btn-buscar">Buscar</button>
+        </section>
+
+        <div id="status" role="status"></div>
+
+        <article id="card" aria-labelledby="nome-pokemon">
+          <div class="imagem-wrapper">
+            <img id="imagem-pokemon" src="" alt="" />
+          </div>
+          <div class="meta-info">
+            <div id="numero-pokemon"></div>
+            <h2 id="nome-pokemon"></h2>
+          </div>
+          <div class="tipos" id="tipos-pokemon"></div>
+          <div class="stats" id="stats-pokemon"></div>
+        </article>
+
+      </div>
+    </div>
+  </main>
+
+  <script src="aula16.js"></script>
+</body>
+</html>
