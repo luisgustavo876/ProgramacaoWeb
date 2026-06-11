@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Cardápio digital da Cantina del Taco - comida mexicana">
+  <title>Cantina del Taco | Cardápio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Nunito:ital,wght@0,400;0,600;0,800;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="topo">
+    <div class="container topo-conteudo">
+      <a class="logo" href="index.html">
+        <i class="fa-solid fa-pepper-hot logo-icone" aria-hidden="true"></i>
+        <span class="logo-texto">Cantina <em>del Taco</em></span>
+      </a>
+      <nav aria-label="Navegação principal">
+        <a href="admin.html" class="btn btn-contorno"><i class="fa-solid fa-user-lock" aria-hidden="true"></i> Admin</a>
+      </nav>
+    </div>
+  </header>
+
+  <section class="hero" aria-label="Apresentação">
+    <div class="hero-conteudo container">
+      <p class="hero-tag">— Auténtica comida mexicana —</p>
+      <h2>¡Bienvenidos!</h2>
+      <p class="hero-sub">Receitas tradicionais do México, feitas na hora com ingredientes frescos.</p>
+      <a href="#cardapio" class="btn btn-primario btn-grande"><i class="fa-solid fa-utensils" aria-hidden="true"></i> Ver cardápio</a>
+    </div>
+  </section>
+
+  <main class="container">
+    <nav class="categorias" aria-label="Categorias do cardápio">
+      <button class="chip ativo" data-cat=""><i class="fa-solid fa-border-all" aria-hidden="true"></i> Todos</button>
+      <button class="chip" data-cat="Tacos"><i class="fa-solid fa-pepper-hot" aria-hidden="true"></i> Tacos</button>
+      <button class="chip" data-cat="Burritos"><i class="fa-solid fa-rug" aria-hidden="true"></i> Burritos</button>
+      <button class="chip" data-cat="Quesadillas"><i class="fa-solid fa-cheese" aria-hidden="true"></i> Quesadillas</button>
+      <button class="chip" data-cat="Nachos"><i class="fa-solid fa-play" aria-hidden="true"></i> Nachos</button>
+      <button class="chip" data-cat="Bebidas"><i class="fa-solid fa-glass-water" aria-hidden="true"></i> Bebidas</button>
+      <button class="chip" data-cat="Sobremesas"><i class="fa-solid fa-ice-cream" aria-hidden="true"></i> Sobremesas</button>
+    </nav>
+
+    <section aria-label="Filtros do cardápio" class="filtros">
+      <div class="campo-busca">
+        <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+        <input type="search" id="busca" placeholder="Buscar prato..." aria-label="Buscar prato">
+      </div>
+      <select id="ordem" aria-label="Ordenar">
+        <option value="">Ordenar por categoria</option>
+        <option value="preco">Menor preço</option>
+      </select>
+    </section>
+
+    <p id="status" class="status" role="status"></p>
+
+    <section id="cardapio" class="grid" aria-label="Cardápio"></section>
+  </main>
+
+  <footer class="rodape">
+    <div class="container rodape-conteudo">
+      <p class="rodape-logo"><i class="fa-solid fa-pepper-hot" aria-hidden="true"></i> Cantina del Taco</p>
+      <p><i class="fa-solid fa-location-dot" aria-hidden="true"></i> Rua dos Sabores, 123 — Itapetininga/SP</p>
+      <p><i class="fa-solid fa-clock" aria-hidden="true"></i> Ter a Dom, 18h às 23h</p>
+      <p class="rodape-creditos">&copy; 2026 — Projeto Integrador FATEC</p>
+    </div>
+  </footer>
+
+  <script src="js/app.js"></script>
+</body>
+</html>

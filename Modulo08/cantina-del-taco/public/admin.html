@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Painel de administração da Cantina del Taco">
+  <title>Cantina del Taco | Admin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Nunito:ital,wght@0,400;0,600;0,800;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="topo">
+    <div class="container topo-conteudo">
+      <a class="logo" href="index.html">
+        <i class="fa-solid fa-pepper-hot logo-icone" aria-hidden="true"></i>
+        <span class="logo-texto">Cantina <em>del Taco</em></span>
+      </a>
+      <nav aria-label="Navegação principal">
+        <a href="index.html" class="btn btn-contorno"><i class="fa-solid fa-utensils" aria-hidden="true"></i> Cardápio</a>
+        <button id="btn-sair" class="btn btn-perigo escondido"><i class="fa-solid fa-right-from-bracket" aria-hidden="true"></i> Sair</button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <!-- Login / Registro -->
+    <section id="secao-login" aria-label="Login">
+      <div class="card-form">
+        <h2 id="titulo-auth"><i class="fa-solid fa-user-lock" aria-hidden="true"></i> Entrar</h2>
+        <form id="form-auth">
+          <div id="campo-nome" class="campo escondido">
+            <label for="nome">Nome</label>
+            <input type="text" id="nome" autocomplete="name">
+          </div>
+          <div class="campo">
+            <label for="email">Email</label>
+            <input type="email" id="email" required autocomplete="email">
+          </div>
+          <div class="campo">
+            <label for="senha">Senha</label>
+            <input type="password" id="senha" required minlength="6" autocomplete="current-password">
+          </div>
+          <button type="submit" class="btn btn-primario" id="btn-auth">Entrar</button>
+        </form>
+        <p class="troca-auth">
+          <span id="texto-troca">Não tem conta?</span>
+          <button type="button" id="btn-troca" class="link">Registrar</button>
+        </p>
+        <p id="status-auth" class="status" role="status"></p>
+      </div>
+    </section>
+
+    <!-- Painel admin -->
+    <section id="secao-painel" class="escondido" aria-label="Painel de administração">
+      <div class="painel-topo">
+        <h2>Gerenciar pratos</h2>
+        <p>Olá, <strong id="nome-usuario"></strong>!</p>
+      </div>
+
+      <div class="card-form">
+        <h3 id="titulo-form-prato">Novo prato</h3>
+        <form id="form-prato">
+          <input type="hidden" id="prato-id">
+          <div class="linha-form">
+            <div class="campo">
+              <label for="prato-nome">Nome</label>
+              <input type="text" id="prato-nome" required>
+            </div>
+            <div class="campo">
+              <label for="prato-preco">Preço (R$)</label>
+              <input type="number" id="prato-preco" step="0.01" min="0" required>
+            </div>
+          </div>
+          <div class="campo">
+            <label for="prato-descricao">Descrição</label>
+            <input type="text" id="prato-descricao">
+          </div>
+          <div class="campo">
+            <label for="prato-imagem">URL da foto (opcional)</label>
+            <input type="url" id="prato-imagem" placeholder="https://...">
+          </div>
+          <div class="linha-form">
+            <div class="campo">
+              <label for="prato-categoria">Categoria</label>
+              <select id="prato-categoria" required>
+                <option value="Tacos">Tacos</option>
+                <option value="Burritos">Burritos</option>
+                <option value="Quesadillas">Quesadillas</option>
+                <option value="Nachos">Nachos</option>
+                <option value="Bebidas">Bebidas</option>
+                <option value="Sobremesas">Sobremesas</option>
+              </select>
+            </div>
+            <div class="campo">
+              <label for="prato-picante">Nível de picância (0 a 3)</label>
+              <input type="number" id="prato-picante" min="0" max="3" value="0">
+            </div>
+            <div class="campo">
+              <label for="prato-disponivel">Disponível</label>
+              <select id="prato-disponivel">
+                <option value="true">Sim</option>
+                <option value="false">Não</option>
+              </select>
+            </div>
+          </div>
+          <div class="acoes-form">
+            <button type="submit" class="btn btn-primario" id="btn-salvar">Salvar</button>
+            <button type="button" class="btn btn-contorno escondido" id="btn-cancelar">Cancelar edição</button>
+          </div>
+        </form>
+        <p id="status-prato" class="status" role="status"></p>
+      </div>
+
+      <p id="status-lista" class="status" role="status"></p>
+      <div class="tabela-wrap">
+        <table class="tabela" aria-label="Lista de pratos">
+          <thead>
+            <tr>
+              <th>Foto</th>
+              <th>Nome</th>
+              <th>Categoria</th>
+              <th>Preço</th>
+              <th>Picância</th>
+              <th>Disponível</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody id="lista-pratos"></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <footer class="rodape">
+    <div class="container rodape-conteudo">
+      <p class="rodape-logo"><i class="fa-solid fa-pepper-hot" aria-hidden="true"></i> Cantina del Taco</p>
+      <p class="rodape-creditos">&copy; 2026 — Projeto Integrador FATEC</p>
+    </div>
+  </footer>
+
+  <script src="js/admin.js"></script>
+</body>
+</html>
